@@ -23,6 +23,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#![feature(test)]
+extern crate test;
+
 pub mod common;
 use common::ChallengeT;
 
@@ -43,5 +46,22 @@ pub fn main() {
 			"5" => day_5::Challenge::print_result(),
 			_ => println!("ERROR: UNKNOWN ARGUMENT"),
 		}
+	}
+}
+
+
+#[cfg(test)]
+mod tests {
+	use test::Bencher;
+	use super::*;
+
+	#[bench]
+	fn all(b: &mut Bencher) {
+		b.iter(|| {
+			day_1::Challenge::print_result();
+			day_2::Challenge::print_result();
+			day_3::Challenge::print_result();
+			day_5::Challenge::print_result();
+		})
 	}
 }
