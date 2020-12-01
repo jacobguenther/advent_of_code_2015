@@ -34,17 +34,15 @@ impl ChallengeT for Challenge {
 		1
 	}
 	fn part_1() -> Self::Output1 {
-		let mut floor = 0;
 		include_str!("../inputs/day_1.txt")
 			.chars()
-			.for_each(|c| {
+			.fold(0, |acc, c| {
 				match c {
-					'(' => floor += 1,
-					')' => floor -= 1,
-					_ => (),
+					'(' => acc + 1,
+					')' => acc - 1,
+					_ => acc,
 				}
-			});
-		floor
+			})
 	}
 	fn part_2() -> Self::Output2 {
 		let mut floor = 0;
