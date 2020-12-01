@@ -28,7 +28,7 @@ use super::common::*;
 pub struct Challenge {}
 impl ChallengeT for Challenge {
 	type Output1 = i32;
-	type Output2 = i32;
+	type Output2 = usize;
 
 	fn day() -> u8 {
 		1
@@ -46,19 +46,17 @@ impl ChallengeT for Challenge {
 	}
 	fn part_2() -> Self::Output2 {
 		let mut floor = 0;
-		let mut position = 1;
-		for c in include_str!("../inputs/day_1.txt").chars() {
+		for (i, c) in include_str!("../inputs/day_1.txt").chars().enumerate() {
 			match c {
 				'(' => floor += 1,
 				')' => floor -= 1,
 				_ => (),
 			}
 			if floor == -1 {
-				break;
+				return i + 1;
 			}
-			position += 1;
 		}
-		position
+		panic!("Failed: Santa never goes to the basement.")
 	}
 }
 
@@ -76,5 +74,15 @@ mod tests {
 	fn part_2() {
 		let res = Challenge::part_2();
 		assert_eq!(res, 1771);
+	}
+
+	use test::Bencher;
+	#[bench]
+	fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::part_1())
+	}
+	#[bench]
+	fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::part_2())
 	}
 }
