@@ -27,41 +27,52 @@ use super::common::*;
 
 pub struct Challenge {}
 impl ChallengeT for Challenge {
-	type Output1 = i32;
-	type Output2 = i32;
+	type Output1 = u32;
+	type Output2 = u32;
 
 	fn day() -> u8 {
 		2
 	}
 	fn part_1() -> Self::Output1 {
+		let mut box_dims = [0, 0, 0];
 		include_str!("../inputs/day_2.txt")
 			.lines()
-			.map(|l| {
-				let mut cs: Vec<i32> = l.split('x')
-					.map(|s| s.parse::<i32>().unwrap())
-					.collect();
-				cs.sort();
-				let (l, w, h) = (cs[0], cs[1], cs[2]);
-				let smallest_side = cs[0] * cs[1];
-				2*(l*w + w*h + h*l) + smallest_side
+			.map(|line| {
+				parse_line(line, &mut box_dims);
+				calc_wrapping_paper(&box_dims)
 			})
 			.sum()
 	}
 	fn part_2() -> Self::Output2 {
+		let mut box_dims = [0, 0, 0];
 		include_str!("../inputs/day_2.txt")
 			.lines()
-			.map(|l| {
-				let mut cs: Vec<i32> = l.split('x')
-					.map(|s| s.parse::<i32>().unwrap() )
-					.collect();
-				cs.sort();
-				let (l, w, h) = (cs[0], cs[1], cs[2]);
-				let ribbon = cs[0]+cs[0] + cs[1]+cs[1];
-				let volume = l*w*h;
-				ribbon + volume
+			.map(|line| {
+				parse_line(line, &mut box_dims);
+				calc_ribbon(&box_dims)
 			})
 			.sum()
 	}
+}
+fn parse_line(line: &str, out: &mut [u32]) {
+	line.split('x')
+		.map(|s| s.parse::<u32>().unwrap() )
+		.enumerate()
+		.for_each(|(i, dim)| {
+			out[i] = dim
+		});
+	out.sort();
+}
+// surface area + surface area of smallest side
+fn calc_wrapping_paper(box_dims: &[u32]) -> u32 {
+	let (l, w, h) = (box_dims[0], box_dims[1], box_dims[2]);
+	3*l*w + 2*(w*h + h*l)
+}
+fn calc_ribbon(box_dims: &[u32]) -> u32 {
+	let (l, w, h) = (box_dims[0], box_dims[1], box_dims[2]);
+	let volume = l*w*h;
+	let shortest_parimeter = l+l + w+w;
+	volume + shortest_parimeter
 }
 
 #[cfg(test)]
@@ -78,5 +89,15 @@ mod tests {
 	fn part_2() {
 		let res = Challenge::part_2();
 		assert_eq!(res, 3842356);
+	}
+
+	use test::Bencher;
+	#[bench]
+	fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::part_1())
+	}
+	#[bench]
+	fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::part_2())
 	}
 }
