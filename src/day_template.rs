@@ -25,7 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 use super::common::*;
 
-pub struct Challenge {}
+pub struct Challenge {
+	input: &'static str,
+}
 impl ChallengeT for Challenge {
 	type Output1 = usize;
 	type Output2 = usize;
@@ -33,12 +35,17 @@ impl ChallengeT for Challenge {
 	fn day() -> u8 {
 		1
 	}
-	fn part_1() -> usize {
-		let input = include_str!("../inputs/day_1.txt");
+	fn new() -> {
+		Challenge {
+			input: include_str!("../inputs/day_1.txt")
+		}
+	}
+	fn part_1(&self) -> usize {
+		self.input.lines();
 		0
 	}
 	fn part_2() -> usize {
-		let input = include_str!("../inputs/day_1.txt");
+		self.input.lines();
 		0
 	}
 }
@@ -67,5 +74,13 @@ mod tests {
 	#[bench]
 	fn part_2_bench(b: &mut Bencher) {
 		b.iter(|| Challenge::part_2())
+	}
+	#[bench]
+	fn both_bench(b: &mut Bencher) {
+		b.iter(|| {
+			let challenge = Challenge::new();
+			challenge.part_1();
+			challenge.part_2();
+		})
 	}
 }

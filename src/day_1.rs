@@ -25,7 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 use super::common::*;
 
-pub struct Challenge {}
+pub struct Challenge {
+	input: &'static str
+}
 impl ChallengeT for Challenge {
 	type Output1 = i32;
 	type Output2 = usize;
@@ -33,9 +35,13 @@ impl ChallengeT for Challenge {
 	fn day() -> u8 {
 		1
 	}
-	fn part_1() -> Self::Output1 {
-		include_str!("../inputs/day_1.txt")
-			.chars()
+	fn new() -> Self {
+		Challenge {
+			input: include_str!("../inputs/day_1.txt"),
+		}
+	}
+	fn part_1(&self) -> Self::Output1 {
+		self.input.chars()
 			.fold(0, |acc, c| {
 				match c {
 					'(' => acc + 1,
@@ -44,9 +50,9 @@ impl ChallengeT for Challenge {
 				}
 			})
 	}
-	fn part_2() -> Self::Output2 {
+	fn part_2(&self) -> Self::Output2 {
 		let mut floor = 0;
-		for (i, c) in include_str!("../inputs/day_1.txt").chars().enumerate() {
+		for (i, c) in self.input.chars().enumerate() {
 			match c {
 				'(' => floor += 1,
 				')' => floor -= 1,
@@ -67,22 +73,30 @@ mod tests {
 
 	#[test]
 	fn part_1() {
-		let res = Challenge::part_1();
+		let res = Challenge::new().part_1();
 		assert_eq!(res, 138);
 	}
 	#[test]
 	fn part_2() {
-		let res = Challenge::part_2();
+		let res = Challenge::new().part_2();
 		assert_eq!(res, 1771);
 	}
 
 	use test::Bencher;
 	#[bench]
 	fn part_1_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::part_1())
+		b.iter(|| Challenge::new().part_1())
 	}
 	#[bench]
 	fn part_2_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::part_2())
+		b.iter(|| Challenge::new().part_2())
+	}
+	#[bench]
+	fn both_bench(b: &mut Bencher) {
+		b.iter(|| {
+			let challenge = Challenge::new();
+			challenge.part_1();
+			challenge.part_2();
+		})
 	}
 }

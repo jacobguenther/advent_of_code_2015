@@ -25,7 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 use super::common::*;
 
-pub struct Challenge {}
+pub struct Challenge {
+	input: &'static str,
+}
 impl ChallengeT for Challenge {
 	type Output1 = u32;
 	type Output2 = u32;
@@ -33,20 +35,23 @@ impl ChallengeT for Challenge {
 	fn day() -> u8 {
 		2
 	}
-	fn part_1() -> Self::Output1 {
+	fn new() -> Self {
+		Challenge {
+			input: include_str!("../inputs/day_2.txt"),
+		}
+	}
+	fn part_1(&self) -> Self::Output1 {
 		let mut box_dims = [0, 0, 0];
-		include_str!("../inputs/day_2.txt")
-			.lines()
+		self.input.lines()
 			.map(|line| {
 				parse_line(line, &mut box_dims);
 				calc_wrapping_paper(&box_dims)
 			})
 			.sum()
 	}
-	fn part_2() -> Self::Output2 {
+	fn part_2(&self) -> Self::Output2 {
 		let mut box_dims = [0, 0, 0];
-		include_str!("../inputs/day_2.txt")
-			.lines()
+		self.input.lines()
 			.map(|line| {
 				parse_line(line, &mut box_dims);
 				calc_ribbon(&box_dims)
@@ -57,9 +62,9 @@ impl ChallengeT for Challenge {
 fn parse_line(line: &str, out: &mut [u32]) {
 	line.split('x')
 		.map(|s| s.parse::<u32>().unwrap() )
-		.enumerate()
-		.for_each(|(i, dim)| {
-			out[i] = dim
+		.zip(out.iter_mut())
+		.for_each(|(dim, element)| {
+			*element = dim
 		});
 	out.sort();
 }
@@ -82,22 +87,30 @@ mod tests {
 
 	#[test]
 	fn part_1() {
-		let res = Challenge::part_1();
+		let res = Challenge::new().part_1();
 		assert_eq!(res, 1606483);
 	}
 	#[test]
 	fn part_2() {
-		let res = Challenge::part_2();
+		let res = Challenge::new().part_2();
 		assert_eq!(res, 3842356);
 	}
 
 	use test::Bencher;
 	#[bench]
 	fn part_1_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::part_1())
+		b.iter(|| Challenge::new().part_1())
 	}
 	#[bench]
 	fn part_2_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::part_2())
+		b.iter(|| Challenge::new().part_2())
+	}
+	#[bench]
+	fn both_bench(b: &mut Bencher) {
+		b.iter(|| {
+			let challenge = Challenge::new();
+			challenge.part_1();
+			challenge.part_2();
+		})
 	}
 }

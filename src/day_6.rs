@@ -24,9 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 use super::common::*;
-use grid::Grid2;
+use grid::Grid;
 
-pub struct Challenge {}
+pub struct Challenge {
+	_input: &'static str,
+	instructions: Vec<LineInstruction>,
+}
 impl ChallengeT for Challenge {
 	type Output1 = usize;
 	type Output2 = u32;
@@ -34,23 +37,28 @@ impl ChallengeT for Challenge {
 	fn day() -> u8 {
 		6
 	}
-	fn part_1() -> Self::Output1 {
-		let mut grid = Grid2::<bool>::new(1000, 1000, &false);
-		include_str!("../inputs/day_6.txt")
-			.lines()
-			.for_each(|line| LineInstruction::from_line(line)
-				.apply_instruction(&mut grid)
-			);
-		count_lights_on(&grid)
+	fn new() -> Self {
+		let input = include_str!("../inputs/day_6.txt");
+		Challenge {
+			_input: input,
+			instructions: input.lines().map(|line| LineInstruction::from_line(line)).collect()
+		}
 	}
-	fn part_2() -> Self::Output2 {
-		let mut grid = Grid2::<u32>::new(1000, 1000, &0);
-		include_str!("../inputs/day_6.txt")
-			.lines()
-			.for_each(|line| LineInstruction::from_line(line)
-				.apply_instruction_2(&mut grid)
-			);
-		get_brightness(&grid)
+	fn part_1(&self) -> Self::Output1 {
+		let mut grid = Grid::<bool>::new(1000, 1000, &false);
+		self.instructions.iter().for_each(|instruction| {
+			instruction.apply_instruction(&mut grid);
+		});
+		grid.data.iter()
+			.filter(|light_on| **light_on)
+			.count()
+	}
+	fn part_2(&self) -> Self::Output2 {
+		let mut grid = Grid::<u32>::new(1000, 1000, &0);
+		self.instructions.iter().for_each(|instruction| {
+			instruction.apply_instruction_2(&mut grid);
+		});
+		grid.data.iter().sum()
 	}
 }
 
@@ -67,29 +75,21 @@ struct LineInstruction {
 }
 impl LineInstruction {
 	fn from_line(line: &str) -> Self {
-		let (instruction, slice) = if line.starts_with("turn on") {
-			(Instruction::On, &line[8..])
-		} else if line.starts_with("turn of") {
-			(Instruction::Off, &line[9..])
-		} else {
+		let (instruction, slice) = if line.starts_with("toggle") {
 			(Instruction::Toggle, &line[7..])
+		} else if line.starts_with("turn on") {
+			(Instruction::On, &line[8..])
+		} else {
+			(Instruction::Off, &line[9..])
 		};
 
-		let mut parts: [&str; 2] = ["", ""];
-		slice.split(" through ")
-			.take(2)
-			.enumerate()
-			.for_each(|(i, p)| {
-				parts[i] = p
-			});
 		let mut coords = [0, 0, 0, 0];
-		parts[0].split(',')
-			.chain(parts[1].split(','))
-			.take(4)
+		slice.split(" through ")
+			.flat_map(|part| part.split(','))
 			.map(|n| n.parse::<usize>().unwrap())
-			.enumerate()
-			.for_each(|(i, n)| {
-				coords[i] = n;
+			.zip(coords.iter_mut())
+			.for_each(|(n, coord)| {
+				*coord = n;
 			});
 
 		Self {
@@ -103,7 +103,7 @@ impl LineInstruction {
 	fn col_range(&self) -> std::ops::Range<usize> {
 		self.coords[0]..(self.coords[2]+1)
 	}
-	fn apply_instruction(&self, grid: &mut Grid2<bool>) {
+	fn apply_instruction(&self, grid: &mut Grid<bool>) {
 		for y in self.row_range() {
 			for x in self.col_range() {
 				let val = match self.instruction {
@@ -115,31 +115,23 @@ impl LineInstruction {
 			}
 		}
 	}
-	fn apply_instruction_2(&self, grid: &mut Grid2<u32>) {
+	fn apply_instruction_2(&self, grid: &mut Grid<u32>) {
 		for y in self.row_range() {
 			for x in self.col_range() {
 				let mut val = grid.get(x, y);
 				match self.instruction {
 					Instruction::On => val += 1,
+					Instruction::Toggle => val += 2,
 					Instruction::Off => match val {
 						0 => continue,
 						1 => val = 0,
 						_ => val -= 1,
 					}
-					Instruction::Toggle => val += 2,
 				}
 				grid.set(x, y, &val);
 			}
 		}
 	}
-}
-fn count_lights_on(grid: &Grid2<bool>) -> usize {
-	grid.data.iter()
-		.filter(|light_on| **light_on)
-		.count()
-}
-fn get_brightness(grid: &Grid2<u32>) -> u32 {
-	grid.data.iter().sum()
 }
 
 #[cfg(test)]
@@ -169,22 +161,34 @@ mod tests {
 
 	#[test]
 	fn part_1_test() {
-		let res = Challenge::part_1();
+		let res = Challenge::new().part_1();
 		assert_eq!(res, 377891);
 	}
 	#[test]
 	fn part_2_test() {
-		let res = Challenge::part_2();
+		let res = Challenge::new().part_2();
 		assert_eq!(res, 14110788);
 	}
 
 	use test::Bencher;
 	#[bench]
+	fn part_line_instruction_bench(b: &mut Bencher) {
+		b.iter(|| LineInstruction::from_line("toggle 23,12 through 24,199"))
+	}
+	#[bench]
 	fn part_1_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::part_1())
+		b.iter(|| Challenge::new().part_1())
 	}
 	#[bench]
 	fn part_2_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::part_2())
+		b.iter(|| Challenge::new().part_2())
+	}
+	#[bench]
+	fn both_bench(b: &mut Bencher) {
+		b.iter(|| {
+			let challenge = Challenge::new();
+			challenge.part_1();
+			challenge.part_2();
+		})
 	}
 }
