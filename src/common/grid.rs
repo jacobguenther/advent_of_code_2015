@@ -25,12 +25,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 use super::vec2::*;
 
-pub struct Grid<T> {
+pub struct Grid2<T> {
 	pub size: Vec2<usize>,
 	pub data: Vec<Vec<T>>,
 }
-impl<T> Grid<T> where
-	T: Default + Copy + Clone,
+impl<T> Grid2<T> where
+	T: Copy + Clone,
 {
 	pub fn new(x: usize, y: usize, default: &T) -> Self {
 		let mut data = Vec::with_capacity(y);
@@ -56,12 +56,12 @@ impl<T> Grid<T> where
 	}
 }
 
-pub struct Grid2<T> {
+pub struct Grid<T> {
 	pub size: Vec2<usize>,
 	pub data: Vec<T>,
 }
-impl<T> Grid2<T> where
-	T: Default + Copy + Clone,
+impl<T> Grid<T> where
+	T: Copy + Clone,
 {
 	pub fn new(x: usize, y: usize, default: &T) -> Self {
 		let s = x*y;
