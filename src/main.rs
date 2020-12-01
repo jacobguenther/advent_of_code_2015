@@ -33,6 +33,7 @@ pub mod day_1;
 pub mod day_2;
 pub mod day_3;
 pub mod day_5;
+pub mod day_6;
 
 use std::env::args;
 
@@ -40,15 +41,26 @@ pub fn main() {
 	for arg in args() {
 		match arg.as_str() {
 			a if a.starts_with("target") => (),
+			"all" => all(),
 			"1" => day_1::Challenge::print_result(),
 			"2" => day_2::Challenge::print_result(),
 			"3" => day_3::Challenge::print_result(),
 			"5" => day_5::Challenge::print_result(),
-			_ => println!("ERROR: UNKNOWN ARGUMENT"),
+			"6" => day_6::Challenge::print_result(),
+			_ => (),
 		}
 	}
+	if args().len() == 1 {
+		all();
+	}
 }
-
+fn all() {
+	day_1::Challenge::print_result();
+	day_2::Challenge::print_result();
+	day_3::Challenge::print_result();
+	day_5::Challenge::print_result();
+	day_6::Challenge::print_result();
+}
 
 #[cfg(test)]
 mod tests {
@@ -56,12 +68,7 @@ mod tests {
 	use super::*;
 
 	#[bench]
-	fn all(b: &mut Bencher) {
-		b.iter(|| {
-			day_1::Challenge::print_result();
-			day_2::Challenge::print_result();
-			day_3::Challenge::print_result();
-			day_5::Challenge::print_result();
-		})
+	fn test_all(b: &mut Bencher) {
+		b.iter(|| all() )
 	}
 }
