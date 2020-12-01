@@ -55,11 +55,14 @@ pub fn main() {
 	}
 }
 fn all() {
+	use std::time::{Instant};
+	let now = Instant::now();
 	day_1::Challenge::print_result();
 	day_2::Challenge::print_result();
 	day_3::Challenge::print_result();
 	day_5::Challenge::print_result();
 	day_6::Challenge::print_result();
+	println!("Estemated Time: {}ms", now.elapsed().as_millis());
 }
 
 #[cfg(test)]
