@@ -27,6 +27,9 @@ pub mod common;
 use common::ChallengeT;
 
 pub mod day_1;
+pub mod day_2;
+pub mod day_3;
+pub mod day_5;
 
 use std::env::args;
 
@@ -35,6 +38,9 @@ pub fn main() {
 		match arg.as_str() {
 			a if a.starts_with("target") => (),
 			"1" => day_1::Challenge::print_result(),
+			"2" => day_2::Challenge::print_result(),
+			"3" => day_3::Challenge::print_result(),
+			"5" => day_5::Challenge::print_result(),
 			_ => println!("ERROR: UNKNOWN ARGUMENT"),
 		}
 	}

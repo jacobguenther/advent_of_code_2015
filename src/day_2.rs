@@ -1,4 +1,4 @@
-// File: day_1.rs
+// File: day_2.rs
 // Author: Jacob Guenther
 // Date: December 2020
 
@@ -31,36 +31,36 @@ impl ChallengeT for Challenge {
 	type Output2 = i32;
 
 	fn day() -> u8 {
-		1
+		2
 	}
 	fn part_1() -> Self::Output1 {
-		let mut floor = 0;
-		include_str!("../inputs/day_1.txt")
-			.chars()
-			.for_each(|c| {
-				match c {
-					'(' => floor += 1,
-					')' => floor -= 1,
-					_ => (),
-				}
-			});
-		floor
+		include_str!("../inputs/day_2.txt")
+			.lines()
+			.map(|l| {
+				let mut cs: Vec<i32> = l.split('x')
+					.map(|s| s.parse::<i32>().unwrap())
+					.collect();
+				cs.sort();
+				let (l, w, h) = (cs[0], cs[1], cs[2]);
+				let smallest_side = cs[0] * cs[1];
+				2*(l*w + w*h + h*l) + smallest_side
+			})
+			.sum()
 	}
 	fn part_2() -> Self::Output2 {
-		let mut floor = 0;
-		let mut position = 1;
-		for c in include_str!("../inputs/day_1.txt").chars() {
-			match c {
-				'(' => floor += 1,
-				')' => floor -= 1,
-				_ => (),
-			}
-			if floor == -1 {
-				break;
-			}
-			position += 1;
-		}
-		position
+		include_str!("../inputs/day_2.txt")
+			.lines()
+			.map(|l| {
+				let mut cs: Vec<i32> = l.split('x')
+					.map(|s| s.parse::<i32>().unwrap() )
+					.collect();
+				cs.sort();
+				let (l, w, h) = (cs[0], cs[1], cs[2]);
+				let ribbon = cs[0]+cs[0] + cs[1]+cs[1];
+				let volume = l*w*h;
+				ribbon + volume
+			})
+			.sum()
 	}
 }
 
@@ -72,11 +72,11 @@ mod tests {
 	#[test]
 	fn part_1() {
 		let res = Challenge::part_1();
-		assert_eq!(res, 138);
+		assert_eq!(res, 1606483);
 	}
 	#[test]
 	fn part_2() {
 		let res = Challenge::part_2();
-		assert_eq!(res, 1771);
+		assert_eq!(res, 3842356);
 	}
 }

@@ -1,4 +1,4 @@
-// File: day_1.rs
+// File: day_3.rs
 // Author: Jacob Guenther
 // Date: December 2020
 
@@ -24,43 +24,64 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 use super::common::*;
+use std::collections::HashSet;
 
 pub struct Challenge {}
 impl ChallengeT for Challenge {
-	type Output1 = i32;
-	type Output2 = i32;
+	type Output1 = usize;
+	type Output2 = usize;
 
 	fn day() -> u8 {
-		1
+		3
 	}
 	fn part_1() -> Self::Output1 {
-		let mut floor = 0;
-		include_str!("../inputs/day_1.txt")
+		let mut houses_visited = HashSet::<vec2::Vec2<i32>>::new();
+		let mut position = vec2::Vec2::new(0, 0);
+		houses_visited.insert(position);
+		include_str!("../inputs/day_3.txt")
 			.chars()
 			.for_each(|c| {
 				match c {
-					'(' => floor += 1,
-					')' => floor -= 1,
+					'<' => position.x -= 1,
+					'>' => position.x += 1,
+					'^' => position.y += 1,
+					'v' => position.y -= 1,
 					_ => (),
 				}
+				houses_visited.insert(position);
 			});
-		floor
+		houses_visited.len()
 	}
 	fn part_2() -> Self::Output2 {
-		let mut floor = 0;
-		let mut position = 1;
-		for c in include_str!("../inputs/day_1.txt").chars() {
-			match c {
-				'(' => floor += 1,
-				')' => floor -= 1,
-				_ => (),
-			}
-			if floor == -1 {
-				break;
-			}
-			position += 1;
-		}
-		position
+		let mut houses_visited = HashSet::<vec2::Vec2<i32>>::new();
+		let mut position_san = vec2::Vec2::new(0, 0);
+		let mut position_rob = vec2::Vec2::new(0, 0);
+		houses_visited.insert(position_san);
+		include_str!("../inputs/day_3.txt")
+			.chars()
+			.enumerate()
+			.for_each(|(i, c)| {
+				if i%2 == 0 {
+					match c {
+						'<' => position_san.x -= 1,
+						'>' => position_san.x += 1,
+						'^' => position_san.y += 1,
+						'v' => position_san.y -= 1,
+						_ => (),
+					}
+					houses_visited.insert(position_san);
+				} else {
+					match c {
+						'<' => position_rob.x -= 1,
+						'>' => position_rob.x += 1,
+						'^' => position_rob.y += 1,
+						'v' => position_rob.y -= 1,
+						_ => (),
+					}
+					houses_visited.insert(position_rob);
+				}
+			});
+		houses_visited.len()
 	}
 }
 
@@ -72,11 +93,11 @@ mod tests {
 	#[test]
 	fn part_1() {
 		let res = Challenge::part_1();
-		assert_eq!(res, 138);
+		assert_eq!(res, 0);
 	}
 	#[test]
 	fn part_2() {
 		let res = Challenge::part_2();
-		assert_eq!(res, 1771);
+		assert_eq!(res, 0);
 	}
 }
