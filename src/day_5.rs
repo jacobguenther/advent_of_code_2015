@@ -43,23 +43,14 @@ impl ChallengeT for Challenge {
 				}
 			});
 
-		let mut nice_2 = 0;
-		for line in include_str!("../inputs/day_5.txt").lines() {
-			println!("{}", line);
-			if is_nice_string(line) {
-				nice_2 += 1;
-			}
-		};
-		assert_eq!(nice, nice_2);
 		nice
 	}
 	fn part_2() -> Self::Output2 {
 		let mut nice = 0;
 		include_str!("../inputs/day_5.txt")
 			.lines()
-			.for_each(|l| {
-				let line = l.chars().collect::<Vec<char>>();
-				if is_new_nice_string(&line) {
+			.for_each(|line| {
+				if is_new_nice_string(line) {
 					nice += 1;
 				}
 			});
@@ -67,44 +58,55 @@ impl ChallengeT for Challenge {
 	}
 }
 fn is_nice_string(s: &str) -> bool {
-	let naughty_pairs = ["ab", "cd", "pq", "xy"];
-	for p in naughty_pairs.iter() {
-		if s.contains(p) {
-			return  false;
-		}
-	}
-	let vowel_count = s.chars().fold(0, |count, c| {
-		count + match c {
-			'a' | 'e' | 'i' | 'o' | 'u' => 1,
-			_ => 0,
-		}
-	});
+	let mut vowel_count = 0;
+	let mut three_vowels = false;
 	let mut double_letters = false;
 	let mut previouse = None;
+
 	for c in s.chars() {
 		if let Some(p) = previouse {
-			if c == p {
-				double_letters = true;
-				break;
+			match (p, c) {
+				('a', 'b') | ('c', 'd') |
+				('p', 'q') | ('x', 'y') => return false,
+				_ => (),
+			}
+			if !double_letters {
+				if p == c {
+					double_letters = true;
+				}
+			}
+		}
+		if !three_vowels {
+			match c {
+				'a' | 'e' | 'i' | 'o' | 'u' => {
+					vowel_count += 1;
+					if vowel_count == 3 {
+						three_vowels = true;
+					}
+				}
+				_ => (),
 			}
 		}
 		previouse = Some(c);
 	}
-	double_letters && vowel_count >= 3
+	three_vowels && double_letters
 }
-fn is_new_nice_string(chars: &Vec<char>) -> bool {
+fn is_new_nice_string(line: &str) -> bool {
+	let chars = line.chars().collect::<Vec<char>>();
+
 	let mut repeat_between = false;
+	let mut two_letters_repeat_twice = false;
+
 	for i in 0..chars.len()-2 {
 		if chars[i] == chars[i+2] {
 			repeat_between = true;
 			break;
 		}
 	}
-	let mut two_letters_repeat_twice = false;
-	for i in 0..chars.len()-3 {
-		let current = (chars[i], chars[i+1]);
-		for ii in (i+2)..chars.len()-1 {
-			let next = (chars[ii], chars[ii+1]);
+	for c in 0..chars.len()-3 {
+		let current = (chars[c], chars[c+1]);
+		for n in (c+2)..chars.len()-1 {
+			let next = (chars[n], chars[n+1]);
 			if current == next {
 				two_letters_repeat_twice = true;
 				break;
@@ -114,6 +116,7 @@ fn is_new_nice_string(chars: &Vec<char>) -> bool {
 			break;
 		}
 	}
+
 	repeat_between && two_letters_repeat_twice
 }
 #[cfg(test)]
@@ -133,11 +136,11 @@ mod tests {
 	#[test]
 	fn new_nice_string_test() {
 		let nice = ["qjhvhtzxzqqjkmpb", "xxyxx"];
-		assert!(is_new_nice_string(&nice[0].chars().collect()));
-		assert!(is_new_nice_string(&nice[1].chars().collect()));
+		assert!(is_new_nice_string(&nice[0]));
+		assert!(is_new_nice_string(&nice[1]));
 		let naughty = ["uurcxstgmygtbstg", "ieodomkazucvgmuy"];
-		assert!(!is_new_nice_string(&naughty[0].chars().collect()));
-		assert!(!is_new_nice_string(&naughty[1].chars().collect()));
+		assert!(!is_new_nice_string(&naughty[0]));
+		assert!(!is_new_nice_string(&naughty[1]));
 	}
 
 	#[test]
@@ -149,5 +152,15 @@ mod tests {
 	fn part_2() {
 		let res = Challenge::part_2();
 		assert_eq!(res, 51);
+	}
+
+	use test::Bencher;
+	#[bench]
+	fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::part_1())
+	}
+	#[bench]
+	fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::part_2())
 	}
 }
