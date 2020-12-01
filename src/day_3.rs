@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 use super::common::*;
+use vec2::Vec2;
 use std::collections::HashSet;
 
 pub struct Challenge {}
@@ -41,47 +42,39 @@ impl ChallengeT for Challenge {
 		include_str!("../inputs/day_3.txt")
 			.chars()
 			.for_each(|c| {
-				match c {
-					'<' => position.x -= 1,
-					'>' => position.x += 1,
-					'^' => position.y += 1,
-					'v' => position.y -= 1,
-					_ => (),
-				}
+				move_santa(c, &mut position);
 				houses_visited.insert(position);
 			});
 		houses_visited.len()
 	}
 	fn part_2() -> Self::Output2 {
-		let mut houses_visited = HashSet::<vec2::Vec2<i32>>::new();
-		let mut position_san = vec2::Vec2::new(0, 0);
-		let mut position_rob = vec2::Vec2::new(0, 0);
+		let mut houses_visited = HashSet::<Vec2<i32>>::new();
+		let mut position_san = Vec2::new(0, 0);
+		let mut position_rob = Vec2::new(0, 0);
 		houses_visited.insert(position_san);
 		include_str!("../inputs/day_3.txt")
 			.chars()
 			.enumerate()
 			.for_each(|(i, c)| {
 				if i%2 == 0 {
-					match c {
-						'<' => position_san.x -= 1,
-						'>' => position_san.x += 1,
-						'^' => position_san.y += 1,
-						'v' => position_san.y -= 1,
-						_ => (),
-					}
+					move_santa(c, &mut position_san);
 					houses_visited.insert(position_san);
 				} else {
-					match c {
-						'<' => position_rob.x -= 1,
-						'>' => position_rob.x += 1,
-						'^' => position_rob.y += 1,
-						'v' => position_rob.y -= 1,
-						_ => (),
-					}
+					move_santa(c, &mut position_rob);
 					houses_visited.insert(position_rob);
 				}
 			});
 		houses_visited.len()
+	}
+}
+#[inline(always)]
+fn move_santa(dir: char, position: &mut Vec2<i32>) {
+	match dir {
+		'<' => position.x -= 1,
+		'>' => position.x += 1,
+		'^' => position.y += 1,
+		'v' => position.y -= 1,
+		_ => (),
 	}
 }
 
@@ -93,11 +86,21 @@ mod tests {
 	#[test]
 	fn part_1() {
 		let res = Challenge::part_1();
-		assert_eq!(res, 0);
+		assert_eq!(res, 2592);
 	}
 	#[test]
 	fn part_2() {
 		let res = Challenge::part_2();
-		assert_eq!(res, 0);
+		assert_eq!(res, 2360);
+	}
+
+	use test::Bencher;
+	#[bench]
+	fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::part_1())
+	}
+	#[bench]
+	fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::part_2())
 	}
 }
