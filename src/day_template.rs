@@ -58,4 +58,14 @@ mod tests {
 		let res = Challenge::part_2();
 		assert_eq!(res, 0);
 	}
+
+	use test::Bencher;
+	#[bench]
+	fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::part_1())
+	}
+	#[bench]
+	fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::part_2())
+	}
 }
