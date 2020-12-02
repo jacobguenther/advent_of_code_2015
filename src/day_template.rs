@@ -40,13 +40,29 @@ impl ChallengeT for Challenge {
 			input: include_str!("../inputs/day_1.txt")
 		}
 	}
-	fn part_1(&self) -> usize {
+	fn part_1(&self) -> Self::Output1 {
 		self.input.lines();
 		0
 	}
-	fn part_2() -> usize {
+	fn part_2(&self) -> Self::Output2 {
 		self.input.lines();
 		0
+	}
+}
+enum Wire {
+	Inputs(Op),
+	Value(u32),
+}
+enum Op {
+	Or(Wire, Wire),
+	AND(Wire, Wire),
+	LSHIFT(wire, u32),
+	RSHIFT(wire, u32),
+	NOT(wire),
+}
+impl Op {
+	fn from_line(line: &str) -> Self {
+
 	}
 }
 
@@ -57,23 +73,23 @@ mod tests {
 
 	#[test]
 	fn part_1_test() {
-		let res = Challenge::part_1();
+		let res = Challenge::new().part_1();
 		assert_eq!(res, 0);
 	}
 	#[test]
 	fn part_2_test() {
-		let res = Challenge::part_2();
+		let res = Challenge::new().part_2();
 		assert_eq!(res, 0);
 	}
 
 	use test::Bencher;
 	#[bench]
 	fn part_1_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::part_1())
+		b.iter(|| Challenge::new().part_1())
 	}
 	#[bench]
 	fn part_2_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::part_2())
+		b.iter(|| Challenge::new().part_2())
 	}
 	#[bench]
 	fn both_bench(b: &mut Bencher) {

@@ -34,6 +34,7 @@ pub mod day_2;
 pub mod day_3;
 pub mod day_5;
 pub mod day_6;
+pub mod day_7;
 
 use std::env::args;
 
@@ -47,6 +48,7 @@ pub fn main() {
 			"3" => day_3::Challenge::print_result(),
 			"5" => day_5::Challenge::print_result(),
 			"6" => day_6::Challenge::print_result(),
+			"7" => day_7::Challenge::print_result(),
 			_ => (),
 		}
 	}
@@ -62,6 +64,7 @@ fn all() {
 	day_3::Challenge::print_result();
 	day_5::Challenge::print_result();
 	day_6::Challenge::print_result();
+	day_7::Challenge::print_result();
 	println!("Estemated Time: {}ms", now.elapsed().as_millis());
 }
 
