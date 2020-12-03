@@ -8,3 +8,6 @@ readme = "readme.md"
 repository = "https://github.com/jacobguenther/advent_of_code_2015"
 license-file = "license.txt"
 keywords = ["aoc", "advent of code", "challenge", "devember"]
+
+[dependencies]
+itertools = "0.9.0"
