@@ -28,7 +28,6 @@ use std::collections::HashMap;
 
 type Operations = HashMap<&'static str, Op>;
 pub struct Challenge {
-	input: &'static str,
 	ops: Operations,
 }
 impl ChallengeT for Challenge {
@@ -41,7 +40,6 @@ impl ChallengeT for Challenge {
 	fn new() -> Self {
 		let input = include_str!("../inputs/day_7.txt");
 		Challenge {
-			input: input,
 			ops: input.lines()
 				.map(|line| {
 					Op::from_line(line)
@@ -67,13 +65,11 @@ fn get_val(signal_name: &'static str, s: &Signal, ops: &Operations, cache: &mut 
 				*cached
 			} else {
 				let partial = solve_for(input, ops, cache);
-				println!("partial {}", partial);
 				cache.insert(input, partial);
 				partial
 			}
 		},
 		Signal::Value(v) => {
-			println!("Value Signal {}", v);
 			cache.insert(signal_name, *v);
 			*v
 		}
@@ -82,7 +78,6 @@ fn get_val(signal_name: &'static str, s: &Signal, ops: &Operations, cache: &mut 
 }
 fn solve_for(signal_name: &'static str, ops: &Operations, cache: &mut HashMap<&str, u16>) -> u16 {
 	let op = ops.get(signal_name).unwrap();
-	println!("{} -> {:?}", signal_name, op);
 	match op {
 		Op::ASSIGN(a) => get_val(signal_name, a, ops, cache),
 		Op::AND(a, b) => {
@@ -197,7 +192,7 @@ mod tests {
 	#[test]
 	fn part_2_test() {
 		let res = Challenge::new().part_2();
-		assert_eq!(res, 0);
+		assert_eq!(res, 14710);
 	}
 
 	use test::Bencher;
