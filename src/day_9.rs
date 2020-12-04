@@ -1,4 +1,4 @@
-// File: day_8.rs
+// File: day_9.rs
 // Author: Jacob Guenther
 // Date: December 2020
 
@@ -37,7 +37,7 @@ impl ChallengeT for Challenge {
 	type Output2 = usize;
 
 	fn day() -> u8 {
-		8
+		9
 	}
 	fn new() -> Self {
 		let input = include_str!("../inputs/day_9.txt");
