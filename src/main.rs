@@ -37,6 +37,7 @@ pub mod day_6;
 pub mod day_7;
 pub mod day_8;
 pub mod day_9;
+pub mod day_10;
 
 use std::env::args;
 
@@ -54,6 +55,7 @@ pub fn main() {
 			"7" => day_7::Challenge::print_result(),
 			"8" => day_8::Challenge::print_result(),
 			"9" => day_9::Challenge::print_result(),
+			"10" => day_10::Challenge::print_result(),
 			_ => (),
 		}
 	}
@@ -64,6 +66,7 @@ pub fn main() {
 fn all() {
 	use std::time::{Instant};
 	let now = Instant::now();
+
 	day_1::Challenge::print_result();
 	day_2::Challenge::print_result();
 	day_3::Challenge::print_result();
@@ -73,6 +76,8 @@ fn all() {
 	day_7::Challenge::print_result();
 	day_8::Challenge::print_result();
 	day_9::Challenge::print_result();
+	day_10::Challenge::print_result();
+
 	println!("Estemated Time: {}ms", now.elapsed().as_millis());
 }
 
