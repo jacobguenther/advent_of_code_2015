@@ -30,48 +30,48 @@ use std::fmt;
 
 pub trait ChallengeT
 where
-    Self: Sized,
+	Self: Sized,
 {
-    type Output1: fmt::Display;
-    type Output2: fmt::Display;
+	type Output1: fmt::Display;
+	type Output2: fmt::Display;
 
-    fn print_result() {
-        println!("{}", Self::result_string());
-    }
-    fn result_string() -> String {
-        let challenge = Self::new();
-        format!(
-            "Day {}\n  part 1: {}\n  part 2: {}",
-            Self::day(),
-            challenge.part_1(),
-            challenge.part_2()
-        )
-    }
+	fn print_result() {
+		println!("{}", Self::result_string());
+	}
+	fn result_string() -> String {
+		let challenge = Self::new();
+		format!(
+			"Day {}\n  part 1: {}\n  part 2: {}",
+			Self::day(),
+			challenge.part_1(),
+			challenge.part_2()
+		)
+	}
 
-    fn day() -> u8;
-    fn new() -> Self;
-    fn part_1(&self) -> Self::Output1;
-    fn part_2(&self) -> Self::Output2;
+	fn day() -> u8;
+	fn new() -> Self;
+	fn part_1(&self) -> Self::Output1;
+	fn part_2(&self) -> Self::Output2;
 }
 
 pub fn get_lines_from_content(input: &str) -> Vec<String> {
-    input
-        .to_owned()
-        .lines()
-        .map(|line| line.to_owned())
-        .collect()
+	input
+		.to_owned()
+		.lines()
+		.map(|line| line.to_owned())
+		.collect()
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+	use super::*;
 
-    #[test]
-    fn get_lines_from_file_test() {
-        let content = include_str!("../../inputs/test.txt");
-        let lines = get_lines_from_content(content);
-        assert_eq!(lines.len(), 2);
-        assert_eq!(lines[0], "Hello World!");
-        assert_eq!(lines[1], "We come in peace");
-    }
+	#[test]
+	fn get_lines_from_file_test() {
+		let content = include_str!("../../inputs/test.txt");
+		let lines = get_lines_from_content(content);
+		assert_eq!(lines.len(), 2);
+		assert_eq!(lines[0], "Hello World!");
+		assert_eq!(lines[1], "We come in peace");
+	}
 }

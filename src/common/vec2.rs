@@ -25,21 +25,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Eq, Ord, Hash)]
 pub struct Vec2<T> {
-    pub x: T,
-    pub y: T,
+	pub x: T,
+	pub y: T,
 }
 impl<T> Vec2<T> {
-    pub fn new(x: T, y: T) -> Self {
-        Self { x: x, y: y }
-    }
+	pub fn new(x: T, y: T) -> Self {
+		Self { x: x, y: y }
+	}
 }
 impl Default for Vec2<i32> {
-    fn default() -> Self {
-        Self { x: 0, y: 0 }
-    }
+	fn default() -> Self {
+		Self { x: 0, y: 0 }
+	}
 }
 impl Default for Vec2<usize> {
-    fn default() -> Self {
-        Self { x: 0, y: 0 }
-    }
+	fn default() -> Self {
+		Self { x: 0, y: 0 }
+	}
 }

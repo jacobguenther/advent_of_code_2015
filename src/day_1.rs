@@ -26,74 +26,74 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 use super::common::*;
 
 pub struct Challenge {
-    input: &'static str,
+	input: &'static str,
 }
 impl ChallengeT for Challenge {
-    type Output1 = i32;
-    type Output2 = usize;
+	type Output1 = i32;
+	type Output2 = usize;
 
-    fn day() -> u8 {
-        1
-    }
-    fn new() -> Self {
-        Challenge {
-            input: include_str!("../inputs/day_1.txt"),
-        }
-    }
-    fn part_1(&self) -> Self::Output1 {
-        self.input.chars().fold(0, |acc, c| match c {
-            '(' => acc + 1,
-            ')' => acc - 1,
-            _ => acc,
-        })
-    }
-    fn part_2(&self) -> Self::Output2 {
-        let mut floor = 0;
-        for (i, c) in self.input.chars().enumerate() {
-            match c {
-                '(' => floor += 1,
-                ')' => floor -= 1,
-                _ => (),
-            }
-            if floor == -1 {
-                return i + 1;
-            }
-        }
-        panic!("Failed: Santa never goes to the basement.")
-    }
+	fn day() -> u8 {
+		1
+	}
+	fn new() -> Self {
+		Challenge {
+			input: include_str!("../inputs/day_1.txt"),
+		}
+	}
+	fn part_1(&self) -> Self::Output1 {
+		self.input.chars().fold(0, |acc, c| match c {
+			'(' => acc + 1,
+			')' => acc - 1,
+			_ => acc,
+		})
+	}
+	fn part_2(&self) -> Self::Output2 {
+		let mut floor = 0;
+		for (i, c) in self.input.chars().enumerate() {
+			match c {
+				'(' => floor += 1,
+				')' => floor -= 1,
+				_ => (),
+			}
+			if floor == -1 {
+				return i + 1;
+			}
+		}
+		panic!("Failed: Santa never goes to the basement.")
+	}
 }
 
 #[cfg(test)]
 mod tests {
-    use super::Challenge;
-    use crate::common::ChallengeT;
+	use super::Challenge;
+	use crate::common::ChallengeT;
 
-    #[test]
-    fn part_1() {
-        let res = Challenge::new().part_1();
-        assert_eq!(res, 138);
-    }
-    #[test]
-    fn part_2() {
-        let res = Challenge::new().part_2();
-        assert_eq!(res, 1771);
-    }
+	#[test]
+	fn part_1() {
+		let res = Challenge::new().part_1();
+		assert_eq!(res, 138);
+	}
+	#[test]
+	fn part_2() {
+		let res = Challenge::new().part_2();
+		assert_eq!(res, 1771);
+	}
 
-    use test::Bencher;
-    #[bench]
-    fn part_1_bench(b: &mut Bencher) {
-        b.iter(|| Challenge::new().part_1())
-    }
-    #[bench]
-    fn part_2_bench(b: &mut Bencher) {
-        b.iter(|| Challenge::new().part_2())
-    }
-    #[bench]
-    fn both_bench(b: &mut Bencher) {
-        b.iter(|| {
-            let challenge = Challenge::new();
-            challenge.part_1();
-            challenge.part_2();
-        })
-    }
+	use test::Bencher;
+	#[bench]
+	fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_1())
+	}
+	#[bench]
+	fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_2())
+	}
+	#[bench]
+	fn both_bench(b: &mut Bencher) {
+		b.iter(|| {
+			let challenge = Challenge::new();
+			challenge.part_1();
+			challenge.part_2();
+		})
+	}
 }

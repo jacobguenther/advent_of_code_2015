@@ -42,52 +42,52 @@ pub mod day_9;
 use std::env::args;
 
 pub fn main() {
-    for arg in args() {
-        match arg.as_str() {
-            a if a.starts_with("target") => (),
-            "all" => all(),
-            "1" => day_1::Challenge::print_result(),
-            "2" => day_2::Challenge::print_result(),
-            "3" => day_3::Challenge::print_result(),
-            "4" => (),
-            "5" => day_5::Challenge::print_result(),
-            "6" => day_6::Challenge::print_result(),
-            "7" => day_7::Challenge::print_result(),
-            "8" => day_8::Challenge::print_result(),
-            "9" => day_9::Challenge::print_result(),
-            "10" => day_10::Challenge::print_result(),
-            _ => (),
-        }
-    }
-    if args().len() == 1 {
-        all();
-    }
+	for arg in args() {
+		match arg.as_str() {
+			a if a.starts_with("target") => (),
+			"all" => all(),
+			"1" => day_1::Challenge::print_result(),
+			"2" => day_2::Challenge::print_result(),
+			"3" => day_3::Challenge::print_result(),
+			"4" => (),
+			"5" => day_5::Challenge::print_result(),
+			"6" => day_6::Challenge::print_result(),
+			"7" => day_7::Challenge::print_result(),
+			"8" => day_8::Challenge::print_result(),
+			"9" => day_9::Challenge::print_result(),
+			"10" => day_10::Challenge::print_result(),
+			_ => (),
+		}
+	}
+	if args().len() == 1 {
+		all();
+	}
 }
 fn all() {
-    use std::time::Instant;
-    let now = Instant::now();
+	use std::time::Instant;
+	let now = Instant::now();
 
-    day_1::Challenge::print_result();
-    day_2::Challenge::print_result();
-    day_3::Challenge::print_result();
+	day_1::Challenge::print_result();
+	day_2::Challenge::print_result();
+	day_3::Challenge::print_result();
 
-    day_5::Challenge::print_result();
-    day_6::Challenge::print_result();
-    day_7::Challenge::print_result();
-    day_8::Challenge::print_result();
-    day_9::Challenge::print_result();
-    day_10::Challenge::print_result();
+	day_5::Challenge::print_result();
+	day_6::Challenge::print_result();
+	day_7::Challenge::print_result();
+	day_8::Challenge::print_result();
+	day_9::Challenge::print_result();
+	day_10::Challenge::print_result();
 
-    println!("Estemated Time: {}ms", now.elapsed().as_millis());
+	println!("Estemated Time: {}ms", now.elapsed().as_millis());
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use test::Bencher;
+	use super::*;
+	use test::Bencher;
 
-    #[bench]
-    fn test_all(b: &mut Bencher) {
-        b.iter(|| all())
-    }
+	#[bench]
+	fn test_all(b: &mut Bencher) {
+		b.iter(|| all())
+	}
 }

@@ -26,62 +26,62 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 use super::vec2::*;
 
 pub struct Grid2<T> {
-    pub size: Vec2<usize>,
-    pub data: Vec<Vec<T>>,
+	pub size: Vec2<usize>,
+	pub data: Vec<Vec<T>>,
 }
 impl<T> Grid2<T>
 where
-    T: Copy + Clone,
+	T: Copy + Clone,
 {
-    pub fn new(x: usize, y: usize, default: &T) -> Self {
-        let mut data = Vec::with_capacity(y);
-        for _ in 0..y {
-            let mut row = Vec::with_capacity(x);
-            for _ in 0..x {
-                row.push(default.clone())
-            }
-            data.push(row);
-        }
-        Self {
-            size: Vec2::new(x, y),
-            data: data,
-        }
-    }
-    #[inline(always)]
-    pub fn get(&self, x: usize, y: usize) -> T {
-        self.data[y][x]
-    }
-    #[inline(always)]
-    pub fn set(&mut self, x: usize, y: usize, val: &T) {
-        self.data[y][x] = val.clone();
-    }
+	pub fn new(x: usize, y: usize, default: &T) -> Self {
+		let mut data = Vec::with_capacity(y);
+		for _ in 0..y {
+			let mut row = Vec::with_capacity(x);
+			for _ in 0..x {
+				row.push(default.clone())
+			}
+			data.push(row);
+		}
+		Self {
+			size: Vec2::new(x, y),
+			data: data,
+		}
+	}
+	#[inline(always)]
+	pub fn get(&self, x: usize, y: usize) -> T {
+		self.data[y][x]
+	}
+	#[inline(always)]
+	pub fn set(&mut self, x: usize, y: usize, val: &T) {
+		self.data[y][x] = val.clone();
+	}
 }
 
 pub struct Grid<T> {
-    pub size: Vec2<usize>,
-    pub data: Vec<T>,
+	pub size: Vec2<usize>,
+	pub data: Vec<T>,
 }
 impl<T> Grid<T>
 where
-    T: Copy + Clone,
+	T: Copy + Clone,
 {
-    pub fn new(x: usize, y: usize, default: &T) -> Self {
-        let s = x * y;
-        let mut data = Vec::with_capacity(s);
-        for _ in 0..s {
-            data.push(default.clone())
-        }
-        Self {
-            size: Vec2::new(x, y),
-            data: data,
-        }
-    }
-    #[inline(always)]
-    pub fn get(&self, x: usize, y: usize) -> T {
-        self.data[y * self.size.x + x]
-    }
-    #[inline(always)]
-    pub fn set(&mut self, x: usize, y: usize, val: &T) {
-        self.data[y * self.size.x + x] = val.clone();
-    }
+	pub fn new(x: usize, y: usize, default: &T) -> Self {
+		let s = x * y;
+		let mut data = Vec::with_capacity(s);
+		for _ in 0..s {
+			data.push(default.clone())
+		}
+		Self {
+			size: Vec2::new(x, y),
+			data: data,
+		}
+	}
+	#[inline(always)]
+	pub fn get(&self, x: usize, y: usize) -> T {
+		self.data[y * self.size.x + x]
+	}
+	#[inline(always)]
+	pub fn set(&mut self, x: usize, y: usize, val: &T) {
+		self.data[y * self.size.x + x] = val.clone();
+	}
 }

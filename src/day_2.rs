@@ -26,91 +26,91 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 use super::common::*;
 
 pub struct Challenge {
-    input: &'static str,
+	input: &'static str,
 }
 impl ChallengeT for Challenge {
-    type Output1 = u32;
-    type Output2 = u32;
+	type Output1 = u32;
+	type Output2 = u32;
 
-    fn day() -> u8 {
-        2
-    }
-    fn new() -> Self {
-        Challenge {
-            input: include_str!("../inputs/day_2.txt"),
-        }
-    }
-    fn part_1(&self) -> Self::Output1 {
-        let mut box_dims = [0, 0, 0];
-        self.input
-            .lines()
-            .map(|line| {
-                parse_line(line, &mut box_dims);
-                calc_wrapping_paper(&box_dims)
-            })
-            .sum()
-    }
-    fn part_2(&self) -> Self::Output2 {
-        let mut box_dims = [0, 0, 0];
-        self.input
-            .lines()
-            .map(|line| {
-                parse_line(line, &mut box_dims);
-                calc_ribbon(&box_dims)
-            })
-            .sum()
-    }
+	fn day() -> u8 {
+		2
+	}
+	fn new() -> Self {
+		Challenge {
+			input: include_str!("../inputs/day_2.txt"),
+		}
+	}
+	fn part_1(&self) -> Self::Output1 {
+		let mut box_dims = [0, 0, 0];
+		self.input
+			.lines()
+			.map(|line| {
+				parse_line(line, &mut box_dims);
+				calc_wrapping_paper(&box_dims)
+			})
+			.sum()
+	}
+	fn part_2(&self) -> Self::Output2 {
+		let mut box_dims = [0, 0, 0];
+		self.input
+			.lines()
+			.map(|line| {
+				parse_line(line, &mut box_dims);
+				calc_ribbon(&box_dims)
+			})
+			.sum()
+	}
 }
 fn parse_line(line: &str, out: &mut [u32]) {
-    line.split('x')
-        .map(|s| s.parse::<u32>().unwrap())
-        .zip(out.iter_mut())
-        .for_each(|(dim, element)| *element = dim);
-    out.sort();
+	line.split('x')
+		.map(|s| s.parse::<u32>().unwrap())
+		.zip(out.iter_mut())
+		.for_each(|(dim, element)| *element = dim);
+	out.sort();
 }
 // surface area + surface area of smallest side
 fn calc_wrapping_paper(box_dims: &[u32]) -> u32 {
-    let (l, w, h) = (box_dims[0], box_dims[1], box_dims[2]);
-    3 * l * w + 2 * (w * h + h * l)
+	let (l, w, h) = (box_dims[0], box_dims[1], box_dims[2]);
+	3 * l * w + 2 * (w * h + h * l)
 }
 fn calc_ribbon(box_dims: &[u32]) -> u32 {
-    let (l, w, h) = (box_dims[0], box_dims[1], box_dims[2]);
-    let volume = l * w * h;
-    let shortest_parimeter = l + l + w + w;
-    volume + shortest_parimeter
+	let (l, w, h) = (box_dims[0], box_dims[1], box_dims[2]);
+	let volume = l * w * h;
+	let shortest_parimeter = l + l + w + w;
+	volume + shortest_parimeter
 }
 
 #[cfg(test)]
 mod tests {
-    use super::Challenge;
-    use crate::common::ChallengeT;
+	use super::Challenge;
+	use crate::common::ChallengeT;
 
-    #[test]
-    fn part_1() {
-        let res = Challenge::new().part_1();
-        assert_eq!(res, 1606483);
-    }
-    #[test]
-    fn part_2() {
-        let res = Challenge::new().part_2();
-        assert_eq!(res, 3842356);
-    }
+	#[test]
+	fn part_1() {
+		let res = Challenge::new().part_1();
+		assert_eq!(res, 1606483);
+	}
+	#[test]
+	fn part_2() {
+		let res = Challenge::new().part_2();
+		assert_eq!(res, 3842356);
+	}
 
-    use test::Bencher;
-    #[bench]
-    fn part_1_bench(b: &mut Bencher) {
-        b.iter(|| Challenge::new().part_1())
-    }
-    #[bench]
-    fn part_2_bench(b: &mut Bencher) {
-        b.iter(|| Challenge::new().part_2())
-    }
-    #[bench]
-    fn both_bench(b: &mut Bencher) {
-        b.iter(|| {
-            let challenge = Challenge::new();
-            challenge.part_1();
-            challenge.part_2();
-        })
-    }
+	use test::Bencher;
+	#[bench]
+	fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_1())
+	}
+	#[bench]
+	fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_2())
+	}
+	#[bench]
+	fn both_bench(b: &mut Bencher) {
+		b.iter(|| {
+			let challenge = Challenge::new();
+			challenge.part_1();
+			challenge.part_2();
+		})
+	}
 }
